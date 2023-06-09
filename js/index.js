@@ -1,37 +1,61 @@
-$.ajax({
-    type: "GET",
-    url: "https://jsonplaceholder.typicode.com/users",
-    dataType: "json",
-    success: function (response) {
-    
-        const getUsuarios = (response) => {
-            const newUsuarios = [] ;
-
-            response.forEach(({ id, name, email, address }) => {
-                const newObject = {};
-        
-                newObject.id_usuario = id;
-                newObject.nombre_usuario = name;
-                newObject.email_usuario = email;
-                newObject.direccion_usuario = address;
-        
-                newUsuarios.push(newObject);
-            });
-
-            return newUsuarios;
-        }
-
-        const usuarios = getUsuarios(response);
-
-        var tablaHtml = '';
-        $.each(usuarios, function (index, data) { 
-            tablaHtml += '<tr>';
-            tablaHtml += '<td>' + data.id_usuario + '</td>';
-            tablaHtml += '<td>' + data.nombre_usuario + '</td>';
-            tablaHtml += '<td>' + data.email_usuario + '</td>';
-            tablaHtml += '<td>' + data.direccion_usuario + '</td>';
-            tablaHtml += '</tr>';
-        });
-        $('#tablaDatos').html(tablaHtml);
-    }
+$(document).ready(function () {
+    tablaUsuarios();
 });
+
+const tablaUsuarios = () => {
+    $.ajax({
+        type: "GET",
+        url: "https://jsonplaceholder.typicode.com/users",
+        dataType: "json"
+      })
+      .done(function(response) {
+        // Operaciones exitosas con la respuesta
+        console.log("Datos obtenidos correctamente:", response);
+        const usuarios = refactorizarUsuarios(response);
+        generarTablaUsuarios(usuarios);
+
+
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        // Manejo de errores
+        console.error("Error en la solicitud:", errorThrown);
+        let alertaErrorHtml = '';
+        alertaErrorHtml += '<br><div class="alert alert-danger" role="alert">';
+        alertaErrorHtml += 'Error en la solicitud';
+        alertaErrorHtml += '</div>';
+        $('#tablaDatos').html(alertaErrorHtml);
+      });
+}
+
+// Función para refactorizar los datos de usuarios
+const refactorizarUsuarios = (usuarios) => {
+    const refactUsuarios = [];
+    usuarios.forEach(({id, name, email, address}) => {
+        const newObject = {
+            id_usuario : id,
+            nombre_usuario : name,
+            email_usuario : email,
+            direccion_usuario : address.street
+        };
+
+        refactUsuarios.push(newObject);
+
+    });
+
+    return refactUsuarios;
+};
+
+const generarTablaUsuarios = (usuarios) => {
+    let tablaHtml = '';
+
+    usuarios.forEach(({id_usuario, nombre_usuario, email_usuario, direccion_usuario}) => {
+        tablaHtml += '<tr>';
+        tablaHtml += `<td>${id_usuario}</td>`;
+        tablaHtml += `<td>${nombre_usuario}</td>`;
+        tablaHtml += `<td>${email_usuario}</td>`;
+        tablaHtml += `<td>${direccion_usuario}</td>`;
+        tablaHtml += '</tr>';
+    });
+
+    $('#tablaDatos').html(tablaHtml);
+}
