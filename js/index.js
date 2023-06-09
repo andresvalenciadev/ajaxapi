@@ -5,9 +5,6 @@ $.ajax({
     success: function (response) {
         var tablaHtml = '';
         $.each(response, function (index, data) { 
-            let usuarios = {
-                
-            }
             tablaHtml += '<tr>';
             tablaHtml += '<td>' + data.id + '</td>';
             tablaHtml += '<td>' + data.name + '</td>';
