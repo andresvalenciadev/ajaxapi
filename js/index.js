@@ -13,8 +13,7 @@ const tablaUsuarios = () => {
         console.log("Datos obtenidos correctamente:", response);
         const usuarios = refactorizarUsuarios(response);
         generarTablaUsuarios(usuarios);
-
-
+        $('#tablaUsuarios').DataTable();
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
         // Manejo de errores
@@ -23,7 +22,7 @@ const tablaUsuarios = () => {
         alertaErrorHtml += '<br><div class="alert alert-danger" role="alert">';
         alertaErrorHtml += 'Error en la solicitud';
         alertaErrorHtml += '</div>';
-        $('#tablaDatos').html(alertaErrorHtml);
+        $('#alertError').html(alertaErrorHtml);
       });
 }
 
@@ -57,5 +56,5 @@ const generarTablaUsuarios = (usuarios) => {
         tablaHtml += '</tr>';
     });
 
-    $('#tablaDatos').html(tablaHtml);
+    $('#tablaUsuariosDatos').html(tablaHtml);
 }
