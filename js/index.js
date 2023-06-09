@@ -3,13 +3,33 @@ $.ajax({
     url: "https://jsonplaceholder.typicode.com/users",
     dataType: "json",
     success: function (response) {
+    
+        const getUsuarios = (response) => {
+            const newUsuarios = [] ;
+
+            response.forEach(({ id, name, email, address }) => {
+                const newObject = {};
+        
+                newObject.id_usuario = id;
+                newObject.nombre_usuario = name;
+                newObject.email_usuario = email;
+                newObject.direccion_usuario = address;
+        
+                newUsuarios.push(newObject);
+            });
+
+            return newUsuarios;
+        }
+
+        const usuarios = getUsuarios(response);
+
         var tablaHtml = '';
-        $.each(response, function (index, data) { 
+        $.each(usuarios, function (index, data) { 
             tablaHtml += '<tr>';
-            tablaHtml += '<td>' + data.id + '</td>';
-            tablaHtml += '<td>' + data.name + '</td>';
-            tablaHtml += '<td>' + data.email + '</td>';
-            tablaHtml += '<td>' + data.address.street + '</td>';
+            tablaHtml += '<td>' + data.id_usuario + '</td>';
+            tablaHtml += '<td>' + data.nombre_usuario + '</td>';
+            tablaHtml += '<td>' + data.email_usuario + '</td>';
+            tablaHtml += '<td>' + data.direccion_usuario + '</td>';
             tablaHtml += '</tr>';
         });
         $('#tablaDatos').html(tablaHtml);
